@@ -1,0 +1,11 @@
+<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>
+<hr>
+<div>
+<select ng-model="$ctrl.selectedTool" ng-options="tool.name for tool in $ctrl.allTools">
+</select>
+</div>
+<div>
+  <button ng-click="$ctrl.addTool($ctrl.selectedTool)" class="button button-primary">Add Tool</button>
+  <button ng-click="$ctrl.removeTools()" class="button button-danger">Remove All Tools</button>
+</div>
+<br>

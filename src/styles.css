@@ -1,0 +1,88 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+  font-size: 16px;
+}
+
+tool {
+  display: inline-block;
+}
+
+.card {
+  display: inline-block;
+  border-radius: 3px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  margin: 0.5em;
+}
+
+.card > .card-heading {
+  font-weight: bold;
+  padding: 0.5em;
+  border-bottom: solid 1px #ccc;
+}
+
+.card > .card-body {
+  padding: 0.5em;
+  text-align: justify;
+}
+
+.w-1 {
+  width: calc(1/12*100%);
+}
+.w-2 {
+  width: calc(2/12*100%);
+}
+.w-3 {
+  width: calc(3/12*100%);
+}
+.w-4 {
+  width: calc(4/12*100%);
+}
+.w-5 {
+  width: calc(5/12*100%);
+}
+.w-6 {
+  width: calc(6/12*100%);
+}
+.w-7 {
+  width: calc(7/12*100%);
+}
+.w-8 {
+  width: calc(8/12*100%);
+}
+.w-9 {
+  width: calc(9/12*100%);
+}
+.w-10 {
+  width: calc(10/12*100%);
+}
+.w-11 {
+  width: calc(11/12*100%);
+}
+.w-12 {
+  width: calc(12/12*100%);
+}
+
+.button {
+  border-radius: 3px;
+  background-color: #ccc;
+  border: solid 1px #aaa;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+.button:hover {
+  box-shadow: inset 0 0 50px rgba(100,100,100,0.2);
+}
+
+.button-primary {
+  background-color: lightblue;
+  border-color: steelblue;
+}
+
+.button-danger {
+  background-color: #e47171;
+  border-color: #be3f3f
+}

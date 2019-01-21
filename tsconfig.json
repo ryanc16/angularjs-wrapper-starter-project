@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "lib": ["dom","es2015"],
+    "baseUrl": "src/",
+    "experimentalDecorators": true
+  },
+  "include": ["src/app/**/*.ts"],
+  "exclude": ["src/app/plugins", "node_modules/**/*"],
+  "typeAcquisition": {
+    "enable": true
+  }
+}

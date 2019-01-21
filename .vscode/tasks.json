@@ -1,0 +1,43 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compile",
+      "type": "shell",
+      "group": "build",
+      "command": "npm",
+      "args": ["run", "compile"],
+      "problemMatcher": [],
+      "dependsOn": [""]
+    },
+    {
+      "label": "Transpile",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "transpile"],
+      "group": "build",
+      "problemMatcher": [],
+      "dependsOn":["PackTemplates"]
+    },
+    {
+      "label": "Browserify",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "browserify"],
+      "group": "build",
+      "problemMatcher": [],
+      "dependsOn":["Transpile"]
+    },
+    {
+      "label": "PackTemplates",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "pack-templates"],
+      "group": "build",
+      "problemMatcher": [],
+      "dependsOn": []
+    }
+  ]
+}
