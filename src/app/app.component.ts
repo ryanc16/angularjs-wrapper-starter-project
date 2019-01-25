@@ -2,7 +2,7 @@ import { Component } from './annotations/component.annotation';
 
 @Component({
   selector: 'app-component',
-  templateUrl: './app/app.component.html'
+  templateUrl: 'app.component.html'
 })
 export class AppComponent {
   constructor() {

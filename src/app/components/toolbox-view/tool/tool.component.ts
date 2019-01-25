@@ -2,7 +2,7 @@ import { Component } from '../../../annotations/component.annotation';
 
 @Component({
   selector: 'tool',
-  templateUrl: './app/components/toolbox-view/tool/tool.component.html',
+  templateUrl: 'tool.component.html',
   providers: ['$scope']
 })
 export class ToolComponent implements angular.IOnDestroy, angular.IOnInit {

@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "amd",
     "target": "es5",
     "lib": ["dom","es2015"],
     "baseUrl": "src/",
+    "outFile": "src/dist/app.bundle.js",
     "experimentalDecorators": true
   },
   "include": ["src/app/**/*.ts"],

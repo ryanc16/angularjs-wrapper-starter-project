@@ -10,7 +10,7 @@
       "command": "npm",
       "args": ["run", "compile"],
       "problemMatcher": [],
-      "dependsOn": [""]
+      "dependsOn": ["Transpile"]
     },
     {
       "label": "Transpile",
@@ -20,15 +20,6 @@
       "group": "build",
       "problemMatcher": [],
       "dependsOn":["PackTemplates"]
-    },
-    {
-      "label": "Browserify",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "browserify"],
-      "group": "build",
-      "problemMatcher": [],
-      "dependsOn":["Transpile"]
     },
     {
       "label": "PackTemplates",
