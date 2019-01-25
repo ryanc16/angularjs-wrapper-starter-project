@@ -5,11 +5,11 @@ This starter project aims to wrap the angular.js library in an Angular2+ develop
 As stated, a goal of this project is to keep the dependencies to a minimum and provide a similar development experience to that which is found in new versions of Angular and Angular CLI.  
 
 This project currently provides:
-* A simple bare-bones native Node.js development server.
+* A simple native Node.js development server.
 * A simple html template loader/packager.
 * The angular.js 1.7.5 distributable framework (dev and prod) with supporting documentation.
 * Module, Component, Directive, and Service decorators.
-* Transpiled wtih TypeScript to commonjs modules style and bundled with Browserify.
+* Transpiled wtih TypeScript to an amd modules bundle and loaded with almond.js.
 * Visual Studio Code tasks for quick compiling (Ctrl+Shift+B)
 * NPM scripts for quick compiling and starting the development server.
 

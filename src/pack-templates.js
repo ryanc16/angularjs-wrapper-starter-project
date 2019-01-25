@@ -5,17 +5,17 @@ function main() {
   writeTemplates();
 }
 function writeTemplates() {
-  const files = findFilesInDir(__dirname+'\\app\\', 'html') || [];
+  const files = findFilesInDir(path.normalize(__dirname+'/app/'), 'html') || [];
   let map = {};
   for(let i=0; i<files.length; i++) {
     const file = files[i];
     let data = fs.readFileSync(file);
     if(data) {
-      let key = file.replace(__dirname.replace(/\\/g, path.posix.sep), '.');
+      let key = path.basename(file.replace(path.normalize(__dirname), '.').replace(/\\/g, '/'));
       map[key] = data.toString();
     }
     let dataout = 'export const Templates = ' + JSON.stringify(map);
-    fs.writeFileSync(__dirname+'\\app\\templates.ts', dataout , {encoding: 'utf-8'});
+    fs.writeFileSync(path.normalize(__dirname+'/app/templates.ts'), dataout , {encoding: 'utf-8'});
   }
 }
 
@@ -36,7 +36,7 @@ function findFilesInDir(startPath,filter){
         let ext = filename.slice(filename.lastIndexOf('.'));
         let lessext = filename.slice(0,filename.lastIndexOf('.'));
         if(ext.match(new RegExp(`\.${filter}`, 'ig')) && fs.existsSync(lessext+'.js')) {
-          results.push(filename.replace(/\\/g, path.posix.sep));
+          results.push(filename);
         }
       }
   }

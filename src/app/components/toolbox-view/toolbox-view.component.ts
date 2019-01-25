@@ -4,7 +4,7 @@ import { ComponentRef, DynamicComponentFactoryService } from '../../services/dyn
 
 @Component({
   selector: 'toolbox-view',
-  templateUrl: './app/components/toolbox-view/toolbox-view.component.html',
+  templateUrl: 'toolbox-view.component.html',
   providers: ['$scope', '$element', DynamicComponentFactoryService]
 })
 export class ToolboxViewComponent {
