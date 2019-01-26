@@ -20,16 +20,16 @@ export function Component(options: ComponentOptions){
       target.prototype.$onInit = function() {
         angular.element(document.head).append(styleEl);
         if(typeof origInit === 'function') {
-          Function.apply(origInit);
+          origInit.call(target.prototype);
         }
       }
-      const origDestroy = target.$onDestroy;
+      const origDestroy = target.prototype.$onDestroy;
       target.prototype.$onDestroy = function() {
         let numRemainingElements = document.querySelectorAll(options.selector).length;
         if(numRemainingElements === 1) {
           angular.element(styleEl).remove();
           if(typeof origDestroy === 'function') {
-            Function.apply(origDestroy);
+            origDestroy.call(target.prototype);
           }
         }
       }
@@ -37,7 +37,7 @@ export function Component(options: ComponentOptions){
     }
     
     target.$ctrl = target.prototype;
-    target.controller = target
+    target.controller = target;
     target.$inject = options.providers ? options.providers.map(dep => dep.name || dep.toString()) : [];
     target.transclude = options.transclude ? options.transclude : false;
     target.restrict = options.restrict ? options.restrict : 'E';
@@ -54,4 +54,5 @@ export interface ComponentOptions extends DirectiveOptions {
   providers?: any[];
   transclude?: boolean;
   restrict?: string;
+  bindings?: object;
 }

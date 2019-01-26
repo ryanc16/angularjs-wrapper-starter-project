@@ -1,1 +1,1 @@
-export const Stylesheets = {"tool.component.css":"tool {\r\n  display: inline-block;\r\n}","toolbox-view.component.css":""}
+export const Stylesheets = {"tool.component.css":"tool {\r\n  display: inline-block;\r\n}","toolbox-view.component.css":"toolbox-view .toolsList {\r\n  display: grid;\r\n  grid-template-columns: repeat(2, 1fr);\r\n}"}

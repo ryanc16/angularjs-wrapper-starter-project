@@ -1,16 +1,22 @@
 import { Component } from '../../annotations/component.annotation';
 import { ToolComponent } from './tool/tool.component';
+import { ToolModel } from './tool/tool.model';
 import { ComponentRef, DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
+import { ViewChild } from '../../annotations/viewchild.annotation';
+
 
 @Component({
   selector: 'toolbox-view',
   templateUrl: 'toolbox-view.component.html',
   stylesUrl: 'toolbox-view.component.css',
-  providers: ['$scope', '$element', DynamicComponentFactoryService]
+  providers: ['$scope', DynamicComponentFactoryService]
 })
-export class ToolboxViewComponent {
+export class ToolboxViewComponent implements angular.IOnInit {
 
-  private allTools: ToolOption[] = [
+  @ViewChild('tools', { readAs: 'JQLite'})
+  private toolElRef: JQLite;
+
+  private allTools: ToolModel[] = [
     {
       name: 'Hammer',
       price: 4.99,
@@ -21,21 +27,31 @@ export class ToolboxViewComponent {
       price: 14.99,
       desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit."
     },
+    {
+      name: 'Phillips Screwdriver',
+      price: 1.69,
+      desc: "This durable Phillips screwdriver is a staple for any toolbox. The chrome vanadium steel construction is rugged enough for even the most stubborn screws and a textured TPR grip handle provides plenty of control and comfort."
+    }
   ];
 
-  private toolBox: {option: ToolOption, comp: ComponentRef<ToolComponent>}[] = [];
+  private toolBox: {option: ToolModel, comp: ComponentRef<ToolComponent>}[] = [];
 
-  selectedTool: ToolOption = this.allTools[0];
+  selectedTool: ToolModel = this.allTools[0];
 
-  constructor(private $scope: angular.IScope, private $element: angular.IRootElementService, private dcfs: DynamicComponentFactoryService) {
-    
+  constructor(private $scope: angular.IScope, private dcfs: DynamicComponentFactoryService) {
+
   }
 
-  addTool(toolSelection: ToolOption) {
+  $onInit(): void {
+
+  }
+
+  addTool(toolSelection: ToolModel) {
+
     let locationInToolbox = this.toolBox.map(tool => tool.option).indexOf(toolSelection);
     if(locationInToolbox < 0) {
       const compRef = this.dcfs.createComponent<ToolComponent>(ToolComponent, this.$scope);
-      this.$element.append(compRef.component);
+      this.toolElRef.append(compRef.component);
 
       compRef.controller.name = toolSelection.name;
       compRef.controller.price = toolSelection.price;
@@ -83,10 +99,4 @@ export class ToolboxViewComponent {
       .map(tool => tool.comp.controller.price*tool.comp.controller.quant)
       .reduce((prev, current) => prev + current) *100) / 100 : 0;
   }
-}
-
-interface ToolOption {
-  name: string;
-  price: number;
-  desc: string;
 }
