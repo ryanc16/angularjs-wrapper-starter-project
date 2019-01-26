@@ -1,1 +1,1 @@
-export const Stylesheets = {"tool.component.css":"","toolbox-view.component.css":""}
+export const Stylesheets = {"tool.component.css":"tool {\r\n  display: inline-block;\r\n}","toolbox-view.component.css":""}
