@@ -1,8 +1,6 @@
 import { Component } from '../../annotations/component.annotation';
-import { ToolComponent } from './tool/tool.component';
+import { DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
 import { ToolModel } from './tool/tool.model';
-import { ComponentRef, DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
-import { ViewChild } from '../../annotations/viewchild.annotation';
 
 
 @Component({
@@ -12,9 +10,6 @@ import { ViewChild } from '../../annotations/viewchild.annotation';
   providers: ['$scope', DynamicComponentFactoryService]
 })
 export class ToolboxViewComponent implements angular.IOnInit {
-
-  @ViewChild('tools', { readAs: 'JQLite'})
-  private toolElRef: JQLite;
 
   private allTools: ToolModel[] = [
     {
@@ -34,7 +29,7 @@ export class ToolboxViewComponent implements angular.IOnInit {
     }
   ];
 
-  private toolBox: {option: ToolModel, comp: ComponentRef<ToolComponent>}[] = [];
+  private toolBox: ToolModel[] = [];
 
   selectedTool: ToolModel = this.allTools[0];
 
@@ -48,55 +43,29 @@ export class ToolboxViewComponent implements angular.IOnInit {
 
   addTool(toolSelection: ToolModel) {
 
-    let locationInToolbox = this.toolBox.map(tool => tool.option).indexOf(toolSelection);
-    if(locationInToolbox < 0) {
-      const compRef = this.dcfs.createComponent<ToolComponent>(ToolComponent, this.$scope);
-      this.toolElRef.append(compRef.component);
-
-      compRef.controller.name = toolSelection.name;
-      compRef.controller.price = toolSelection.price;
-      compRef.controller.desc = toolSelection.desc;
-      compRef.newScope.$on('removeTool', (event, data) => {
-        let compref = this.toolBox.filter(tool => tool.comp.newScope === data);
-        this.removeOneTool(compRef);
-      });
-
-      this.toolBox.push({option: toolSelection, comp: compRef});
+    let locationInToolbox = this.toolBox.indexOf(toolSelection);
+    if(locationInToolbox < 0) { 
+      this.toolBox.push(toolSelection);
     }
-    else {
-      this.toolBox[locationInToolbox].comp.controller.quant++;
-    }
-    
-    
   }
 
-  removeOneTool(tool: ComponentRef<ToolComponent>) {
+  removeOneTool(tool: ToolModel) {
     if(tool != null) {
-      let locationInToolbox = this.toolBox.map(tool => tool.comp).indexOf(tool);
+      let locationInToolbox = this.toolBox.indexOf(tool);
       if(locationInToolbox > -1) {
-        const ctrl = this.toolBox[locationInToolbox].comp.controller;
-        if(ctrl.quant > 1) {
-          ctrl.quant--;
-        }
-        else {
-          this.dcfs.removeComponent(tool);
           this.toolBox.splice(locationInToolbox,1);
-        }
       }
     }
   }
 
   removeTools(){
-    for(let tool of this.toolBox) {
-      this.dcfs.removeComponent(tool.comp);
-    }
     this.toolBox.splice(0);
   }
 
   get totalCostOfTools(): number {
     return this.toolBox.length > 0 ? Math.round(
       this.toolBox
-      .map(tool => tool.comp.controller.price*tool.comp.controller.quant)
-      .reduce((prev, current) => prev + current) *100) / 100 : 0;
+      .map(tool => tool.price)
+      .reduce((prev, current) => prev + current) * 100) / 100 : 0;
   }
 }
