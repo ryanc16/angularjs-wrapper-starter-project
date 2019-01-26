@@ -20,6 +20,6 @@ export class Utils {
   }
 
   static kababCaseToCamelCase(input: string): string {
-    return input.toLowerCase().replace(/-(\w)/ig, ($0,$1) => $1.toUpperCase());
+    return input.replace(/-(\w)/ig, ($0,$1) => $1.toUpperCase());
   }
 }

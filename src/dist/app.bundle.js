@@ -4,15 +4,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 define("templates", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card w-4\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>\r\n<div #tools>\r\n  \r\n</div>" };
+    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>\r\n<div class=\"toolsList\" templateId=\"tools\"></div>" };
 });
 define("stylesheets", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Stylesheets = { "tool.component.css": "tool {\r\n  display: inline-block;\r\n}", "toolbox-view.component.css": "" };
+    exports.Stylesheets = { "tool.component.css": "tool {\r\n  display: inline-block;\r\n}", "toolbox-view.component.css": "toolbox-view .toolsList {\r\n  display: grid;\r\n  grid-template-columns: repeat(2, 1fr);\r\n}" };
 });
 define("utils/utils", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -39,7 +42,7 @@ define("utils/utils", ["require", "exports"], function (require, exports) {
             return out;
         };
         Utils.kababCaseToCamelCase = function (input) {
-            return input.toLowerCase().replace(/-(\w)/ig, function ($0, $1) { return $1.toUpperCase(); });
+            return input.replace(/-(\w)/ig, function ($0, $1) { return $1.toUpperCase(); });
         };
         return Utils;
     }());
@@ -63,6 +66,7 @@ define("annotations/directive.annotation", ["require", "exports", "utils/utils",
             target.$inject = options.providers ? options.providers.map(function (dep) { return dep.name || dep.toString(); }) : [];
             target.transclude = options.transclude ? options.transclude : false;
             target.restrict = options.restrict ? options.restrict : 'EA';
+            target.link = options.link || function (scope, elem, attrs) { };
             target.type = 'directive';
         };
     }
@@ -87,16 +91,16 @@ define("annotations/component.annotation", ["require", "exports", "templates", "
                 target.prototype.$onInit = function () {
                     angular.element(document.head).append(styleEl_1);
                     if (typeof origInit_1 === 'function') {
-                        Function.apply(origInit_1);
+                        origInit_1.call(target.prototype);
                     }
                 };
-                var origDestroy_1 = target.$onDestroy;
+                var origDestroy_1 = target.prototype.$onDestroy;
                 target.prototype.$onDestroy = function () {
                     var numRemainingElements = document.querySelectorAll(options.selector).length;
                     if (numRemainingElements === 1) {
                         angular.element(styleEl_1).remove();
                         if (typeof origDestroy_1 === 'function') {
-                            Function.apply(origDestroy_1);
+                            origDestroy_1.call(target.prototype);
                         }
                     }
                 };
@@ -121,7 +125,8 @@ define("app.component", ["require", "exports", "annotations/component.annotation
             component_annotation_1.Component({
                 selector: 'app-component',
                 templateUrl: 'app.component.html'
-            })
+            }),
+            __metadata("design:paramtypes", [])
         ], AppComponent);
         return AppComponent;
     }());
@@ -194,11 +199,16 @@ define("components/toolbox-view/tool/tool.component", ["require", "exports", "an
                 templateUrl: 'tool.component.html',
                 stylesUrl: 'tool.component.css',
                 providers: ['$scope']
-            })
+            }),
+            __metadata("design:paramtypes", [Object])
         ], ToolComponent);
         return ToolComponent;
     }());
     exports.ToolComponent = ToolComponent;
+});
+define("components/toolbox-view/tool/tool.model", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("annotations/injectable.annotation", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -231,7 +241,8 @@ define("services/dynamic-component-factory.service", ["require", "exports", "ann
             compRef.newScope.$apply();
         };
         DynamicComponentFactoryService = __decorate([
-            injectable_annotation_1.Injectable()
+            injectable_annotation_1.Injectable(),
+            __metadata("design:paramtypes", [Function])
         ], DynamicComponentFactoryService);
         return DynamicComponentFactoryService;
     }());
@@ -241,8 +252,29 @@ define("annotations/viewchild.annotation", ["require", "exports"], function (req
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function ViewChild(varname, options) {
-        return function (target) {
-            console.log(target);
+        return function (target, key) {
+            var origInit = target.$onInit;
+            target.$onInit = function () {
+                var el = document.querySelector('[templateId=' + varname + ']');
+                var returnValue;
+                if (options && options.readAs) {
+                    switch (options.readAs) {
+                        case 'JQLite':
+                            returnValue = angular.element(el);
+                            break;
+                        default:
+                            returnValue = el;
+                            break;
+                    }
+                }
+                else {
+                    returnValue = el;
+                }
+                target[key] = returnValue;
+                if (typeof origInit === 'function') {
+                    origInit.call(target);
+                }
+            };
         };
     }
     exports.ViewChild = ViewChild;
@@ -251,9 +283,8 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ToolboxViewComponent = /** @class */ (function () {
-        function ToolboxViewComponent($scope, $element, dcfs) {
+        function ToolboxViewComponent($scope, dcfs) {
             this.$scope = $scope;
-            this.$element = $element;
             this.dcfs = dcfs;
             this.allTools = [
                 {
@@ -266,19 +297,23 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
                     price: 14.99,
                     desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit."
                 },
+                {
+                    name: 'Phillips Screwdriver',
+                    price: 1.69,
+                    desc: "This durable Phillips screwdriver is a staple for any toolbox. The chrome vanadium steel construction is rugged enough for even the most stubborn screws and a textured TPR grip handle provides plenty of control and comfort."
+                }
             ];
             this.toolBox = [];
             this.selectedTool = this.allTools[0];
         }
         ToolboxViewComponent.prototype.$onInit = function () {
-            console.log(this.toolElRef);
         };
         ToolboxViewComponent.prototype.addTool = function (toolSelection) {
             var _this = this;
             var locationInToolbox = this.toolBox.map(function (tool) { return tool.option; }).indexOf(toolSelection);
             if (locationInToolbox < 0) {
                 var compRef_1 = this.dcfs.createComponent(tool_component_1.ToolComponent, this.$scope);
-                this.$element.append(compRef_1.component);
+                this.toolElRef.append(compRef_1.component);
                 compRef_1.controller.name = toolSelection.name;
                 compRef_1.controller.price = toolSelection.price;
                 compRef_1.controller.desc = toolSelection.desc;
@@ -324,15 +359,17 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
             configurable: true
         });
         __decorate([
-            viewchild_annotation_1.ViewChild('tools')
+            viewchild_annotation_1.ViewChild('tools', { readAs: 'JQLite' }),
+            __metadata("design:type", Object)
         ], ToolboxViewComponent.prototype, "toolElRef", void 0);
         ToolboxViewComponent = __decorate([
             component_annotation_3.Component({
                 selector: 'toolbox-view',
                 templateUrl: 'toolbox-view.component.html',
                 stylesUrl: 'toolbox-view.component.css',
-                providers: ['$scope', '$element', dynamic_component_factory_service_1.DynamicComponentFactoryService]
-            })
+                providers: ['$scope', dynamic_component_factory_service_1.DynamicComponentFactoryService]
+            }),
+            __metadata("design:paramtypes", [Object, dynamic_component_factory_service_1.DynamicComponentFactoryService])
         ], ToolboxViewComponent);
         return ToolboxViewComponent;
     }());
@@ -375,13 +412,30 @@ define("services/http-request.service", ["require", "exports", "annotations/inje
             // return angular.injector(['ng']).get('$http').get(url, {responseType: 'text/html'});
         };
         HttpRequestService = __decorate([
-            injectable_annotation_2.Injectable()
+            injectable_annotation_2.Injectable(),
+            __metadata("design:paramtypes", [Function])
         ], HttpRequestService);
         return HttpRequestService;
     }());
     exports.HttpRequestService = HttpRequestService;
 });
-define("app.module", ["require", "exports", "annotations/module.annotation", "app.component", "components/toolbox-view/toolbox-view.module", "services/http-request.service"], function (require, exports, module_annotation_2, app_component_1, toolbox_view_module_1, http_request_service_1) {
+define("directives/template-id.directive", ["require", "exports", "annotations/directive.annotation"], function (require, exports, directive_annotation_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    var TemplateIdDirective = /** @class */ (function () {
+        function TemplateIdDirective($scope) {
+        }
+        TemplateIdDirective = __decorate([
+            directive_annotation_1.Directive({
+                selector: 'templateId'
+            }),
+            __metadata("design:paramtypes", [Object])
+        ], TemplateIdDirective);
+        return TemplateIdDirective;
+    }());
+    exports.TemplateIdDirective = TemplateIdDirective;
+});
+define("app.module", ["require", "exports", "annotations/module.annotation", "app.component", "components/toolbox-view/toolbox-view.module", "services/http-request.service", "directives/template-id.directive"], function (require, exports, module_annotation_2, app_component_1, toolbox_view_module_1, http_request_service_1, template_id_directive_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var AppModule = /** @class */ (function () {
@@ -390,7 +444,8 @@ define("app.module", ["require", "exports", "annotations/module.annotation", "ap
         AppModule = __decorate([
             module_annotation_2.NgModule({
                 declarations: [
-                    app_component_1.AppComponent
+                    app_component_1.AppComponent,
+                    template_id_directive_1.TemplateIdDirective
                 ],
                 providers: [
                     http_request_service_1.HttpRequestService
@@ -411,6 +466,19 @@ define("main", ["require", "exports", "app.module"], function (require, exports,
     Object.defineProperty(exports, "__esModule", { value: true });
     new app_module_1.AppModule();
 });
+define("annotations/input.annotation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function Input(type) {
+        return function (target, key) {
+            if (target.bindings == null) {
+                target.bindings = {};
+            }
+            target.bindings[key] = type;
+        };
+    }
+    exports.Input = Input;
+});
 define("services/ng-services.service", ["require", "exports", "annotations/injectable.annotation"], function (require, exports, injectable_annotation_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -426,7 +494,8 @@ define("services/ng-services.service", ["require", "exports", "annotations/injec
             return this.$injector;
         };
         NgServices = __decorate([
-            injectable_annotation_3.Injectable()
+            injectable_annotation_3.Injectable(),
+            __metadata("design:paramtypes", [Object, Object])
         ], NgServices);
         return NgServices;
     }());
