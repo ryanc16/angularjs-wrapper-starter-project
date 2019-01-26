@@ -1,0 +1,11 @@
+<div class="card">
+  <div class="card-heading">
+    {{$ctrl.options.title}}
+  </div>
+  <div class="card-body">
+    {{$ctrl.options.message}}
+  </div>
+  <div class="card-footer flex-right">
+      <button class="button button-success" ng-click="$ctrl.confirm()">Yes</button> <button class="button button-danger" ng-click="$ctrl.deny()">No</button>
+  </div>
+</div>

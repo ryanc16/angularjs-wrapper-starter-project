@@ -24,7 +24,7 @@ function findFilesInDir(startPath,filter){
   if (!fs.existsSync(startPath)){
       return;
   }
-  let files=fs.readdirSync(startPath) || [];
+  let files = fs.readdirSync(startPath) || [];
   for(let i=0;i<files.length;i++){
       let filename=path.join(startPath,files[i]);
       let stat = fs.lstatSync(filename);
@@ -35,7 +35,7 @@ function findFilesInDir(startPath,filter){
       else {
         let ext = filename.slice(filename.lastIndexOf('.'));
         let lessext = filename.slice(0,filename.lastIndexOf('.'));
-        if(ext.match(new RegExp(`\.${filter}`, 'ig')) && fs.existsSync(lessext+'.js')) {
+        if(ext.match(new RegExp(`\.${filter}`, 'ig')) && fs.existsSync(lessext+'.ts')) {
           results.push(filename);
         }
       }
