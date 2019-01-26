@@ -9,6 +9,11 @@ define("templates", ["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card w-4\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>" };
 });
+define("stylesheets", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Stylesheets = { "tool.component.css": "", "toolbox-view.component.css": "" };
+});
 define("utils/utils", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -63,7 +68,7 @@ define("annotations/directive.annotation", ["require", "exports", "utils/utils",
     }
     exports.Directive = Directive;
 });
-define("annotations/component.annotation", ["require", "exports", "templates", "utils/utils"], function (require, exports, templates_2, utils_2) {
+define("annotations/component.annotation", ["require", "exports", "templates", "stylesheets", "utils/utils"], function (require, exports, templates_2, stylesheets_1, utils_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function Component(options) {
@@ -75,6 +80,26 @@ define("annotations/component.annotation", ["require", "exports", "templates", "
             else if (options.templateUrl) {
                 options.template = '';
                 target.template = templates_2.Templates[options.templateUrl];
+            }
+            if (options.stylesUrl) {
+                var origInit_1 = target.prototype.$onInit;
+                var styleEl_1 = angular.element("<style>" + stylesheets_1.Stylesheets[options.stylesUrl] + "</style>");
+                target.prototype.$onInit = function () {
+                    angular.element(document.head).append(styleEl_1);
+                    if (typeof origInit_1 === 'function') {
+                        origInit_1();
+                    }
+                };
+                var origDestroy_1 = target.$onDestroy;
+                target.prototype.$onDestroy = function () {
+                    var numRemainingElements = document.querySelectorAll(options.selector).length;
+                    if (numRemainingElements === 1) {
+                        angular.element(styleEl_1).remove();
+                        if (typeof origDestroy_1 === 'function') {
+                            origDestroy_1();
+                        }
+                    }
+                };
             }
             target.$ctrl = target.prototype;
             target.controller = target;
@@ -167,6 +192,7 @@ define("components/toolbox-view/tool/tool.component", ["require", "exports", "an
             component_annotation_2.Component({
                 selector: 'tool',
                 templateUrl: 'tool.component.html',
+                stylesUrl: 'tool.component.css',
                 providers: ['$scope']
             })
         ], ToolComponent);
@@ -223,14 +249,12 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
                 {
                     name: 'Hammer',
                     price: 4.99,
-                    desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip.",
-                    component: tool_component_1.ToolComponent
+                    desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip."
                 },
                 {
                     name: 'Wrench',
                     price: 14.99,
-                    desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit.",
-                    component: tool_component_1.ToolComponent
+                    desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit."
                 },
             ];
             this.toolBox = [];
@@ -240,7 +264,7 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
             var _this = this;
             var locationInToolbox = this.toolBox.map(function (tool) { return tool.option; }).indexOf(toolSelection);
             if (locationInToolbox < 0) {
-                var compRef_1 = this.dcfs.createComponent(toolSelection.component, this.$scope);
+                var compRef_1 = this.dcfs.createComponent(tool_component_1.ToolComponent, this.$scope);
                 this.$element.append(compRef_1.component);
                 compRef_1.controller.name = toolSelection.name;
                 compRef_1.controller.price = toolSelection.price;
@@ -290,6 +314,7 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
             component_annotation_3.Component({
                 selector: 'toolbox-view',
                 templateUrl: 'toolbox-view.component.html',
+                stylesUrl: 'toolbox-view.component.css',
                 providers: ['$scope', '$element', dynamic_component_factory_service_1.DynamicComponentFactoryService]
             })
         ], ToolboxViewComponent);

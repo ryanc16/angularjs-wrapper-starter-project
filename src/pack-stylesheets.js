@@ -5,7 +5,7 @@ function main() {
   writeTemplates();
 }
 function writeTemplates() {
-  const files = findFilesInDir(path.normalize(__dirname+'/app/'), 'html') || [];
+  const files = findFilesInDir(path.normalize(__dirname+'/app/'), 'css') || [];
   let map = {};
   for(let i=0; i<files.length; i++) {
     const file = files[i];
@@ -15,8 +15,8 @@ function writeTemplates() {
       map[key] = data.toString();
     }
   }
-  let dataout = 'export const Templates = ' + JSON.stringify(map);
-  fs.writeFileSync(path.normalize(__dirname+'/app/templates.ts'), dataout , {encoding: 'utf-8'});
+  let dataout = 'export const Stylesheets = ' + JSON.stringify(map);
+  fs.writeFileSync(path.normalize(__dirname+'/app/stylesheets.ts'), dataout , {encoding: 'utf-8'});
 }
 
 function findFilesInDir(startPath,filter){
@@ -35,7 +35,9 @@ function findFilesInDir(startPath,filter){
       else {
         let ext = filename.slice(filename.lastIndexOf('.'));
         let lessext = filename.slice(0,filename.lastIndexOf('.'));
-        if(ext.match(new RegExp(`\.${filter}`, 'ig')) && fs.existsSync(lessext+'.js')) {
+        if(ext.match(new RegExp(`\.${filter}`, 'ig'))
+        // && fs.existsSync(lessext+'.html')
+        ) {
           results.push(filename);
         }
       }

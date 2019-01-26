@@ -5,6 +5,7 @@ import { ComponentRef, DynamicComponentFactoryService } from '../../services/dyn
 @Component({
   selector: 'toolbox-view',
   templateUrl: 'toolbox-view.component.html',
+  stylesUrl: 'toolbox-view.component.css',
   providers: ['$scope', '$element', DynamicComponentFactoryService]
 })
 export class ToolboxViewComponent {
@@ -13,14 +14,12 @@ export class ToolboxViewComponent {
     {
       name: 'Hammer',
       price: 4.99,
-      desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip.",
-      component: ToolComponent
+      desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip."
     },
     {
       name: 'Wrench',
       price: 14.99,
-      desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit.",
-      component: ToolComponent
+      desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit."
     },
   ];
 
@@ -35,7 +34,7 @@ export class ToolboxViewComponent {
   addTool(toolSelection: ToolOption) {
     let locationInToolbox = this.toolBox.map(tool => tool.option).indexOf(toolSelection);
     if(locationInToolbox < 0) {
-      const compRef = this.dcfs.createComponent<ToolComponent>(toolSelection.component, this.$scope);
+      const compRef = this.dcfs.createComponent<ToolComponent>(ToolComponent, this.$scope);
       this.$element.append(compRef.component);
 
       compRef.controller.name = toolSelection.name;
@@ -90,5 +89,4 @@ interface ToolOption {
   name: string;
   price: number;
   desc: string;
-  component: angular.IComponentController;
 }
