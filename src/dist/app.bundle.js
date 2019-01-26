@@ -7,12 +7,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 define("templates", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card w-4\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>" };
+    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card w-4\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>\r\n<div #tools>\r\n  \r\n</div>" };
 });
 define("stylesheets", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Stylesheets = { "tool.component.css": "", "toolbox-view.component.css": "" };
+    exports.Stylesheets = { "tool.component.css": "tool {\r\n  display: inline-block;\r\n}", "toolbox-view.component.css": "" };
 });
 define("utils/utils", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -87,7 +87,7 @@ define("annotations/component.annotation", ["require", "exports", "templates", "
                 target.prototype.$onInit = function () {
                     angular.element(document.head).append(styleEl_1);
                     if (typeof origInit_1 === 'function') {
-                        origInit_1();
+                        Function.apply(origInit_1);
                     }
                 };
                 var origDestroy_1 = target.$onDestroy;
@@ -96,7 +96,7 @@ define("annotations/component.annotation", ["require", "exports", "templates", "
                     if (numRemainingElements === 1) {
                         angular.element(styleEl_1).remove();
                         if (typeof origDestroy_1 === 'function') {
-                            origDestroy_1();
+                            Function.apply(origDestroy_1);
                         }
                     }
                 };
@@ -237,7 +237,17 @@ define("services/dynamic-component-factory.service", ["require", "exports", "ann
     }());
     exports.DynamicComponentFactoryService = DynamicComponentFactoryService;
 });
-define("components/toolbox-view/toolbox-view.component", ["require", "exports", "annotations/component.annotation", "components/toolbox-view/tool/tool.component", "services/dynamic-component-factory.service"], function (require, exports, component_annotation_3, tool_component_1, dynamic_component_factory_service_1) {
+define("annotations/viewchild.annotation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function ViewChild(varname, options) {
+        return function (target) {
+            console.log(target);
+        };
+    }
+    exports.ViewChild = ViewChild;
+});
+define("components/toolbox-view/toolbox-view.component", ["require", "exports", "annotations/component.annotation", "components/toolbox-view/tool/tool.component", "services/dynamic-component-factory.service", "annotations/viewchild.annotation"], function (require, exports, component_annotation_3, tool_component_1, dynamic_component_factory_service_1, viewchild_annotation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ToolboxViewComponent = /** @class */ (function () {
@@ -260,6 +270,9 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
             this.toolBox = [];
             this.selectedTool = this.allTools[0];
         }
+        ToolboxViewComponent.prototype.$onInit = function () {
+            console.log(this.toolElRef);
+        };
         ToolboxViewComponent.prototype.addTool = function (toolSelection) {
             var _this = this;
             var locationInToolbox = this.toolBox.map(function (tool) { return tool.option; }).indexOf(toolSelection);
@@ -310,6 +323,9 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
             enumerable: true,
             configurable: true
         });
+        __decorate([
+            viewchild_annotation_1.ViewChild('tools')
+        ], ToolboxViewComponent.prototype, "toolElRef", void 0);
         ToolboxViewComponent = __decorate([
             component_annotation_3.Component({
                 selector: 'toolbox-view',

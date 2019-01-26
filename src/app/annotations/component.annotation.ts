@@ -17,19 +17,19 @@ export function Component(options: ComponentOptions){
     if(options.stylesUrl) {
       const origInit = target.prototype.$onInit;
       const styleEl = angular.element(`<style>${Stylesheets[options.stylesUrl]}</style>`);
-      target.prototype.$onInit = () => {
+      target.prototype.$onInit = function() {
         angular.element(document.head).append(styleEl);
         if(typeof origInit === 'function') {
-          origInit();
+          Function.apply(origInit);
         }
       }
       const origDestroy = target.$onDestroy;
-      target.prototype.$onDestroy = () => {
+      target.prototype.$onDestroy = function() {
         let numRemainingElements = document.querySelectorAll(options.selector).length;
         if(numRemainingElements === 1) {
           angular.element(styleEl).remove();
           if(typeof origDestroy === 'function') {
-            origDestroy();
+            Function.apply(origDestroy);
           }
         }
       }
