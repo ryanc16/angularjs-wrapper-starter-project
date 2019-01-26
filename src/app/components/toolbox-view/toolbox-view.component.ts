@@ -1,13 +1,14 @@
 import { Component } from '../../annotations/component.annotation';
-import { DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
+import { ModalDialogService } from '../dialog/modal-dialog.service';
 import { ToolModel } from './tool/tool.model';
+import { ConfirmDialogComponent } from '../dialog/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
   selector: 'toolbox-view',
   templateUrl: 'toolbox-view.component.html',
   stylesUrl: 'toolbox-view.component.css',
-  providers: ['$scope', DynamicComponentFactoryService]
+  providers: ['$scope', ModalDialogService]
 })
 export class ToolboxViewComponent implements angular.IOnInit {
 
@@ -33,7 +34,7 @@ export class ToolboxViewComponent implements angular.IOnInit {
 
   selectedTool: ToolModel = this.allTools[0];
 
-  constructor(private $scope: angular.IScope, private dcfs: DynamicComponentFactoryService) {
+  constructor(private $scope: angular.IScope, private dialogService: ModalDialogService) {
 
   }
 
@@ -42,7 +43,6 @@ export class ToolboxViewComponent implements angular.IOnInit {
   }
 
   addTool(toolSelection: ToolModel) {
-
     let locationInToolbox = this.toolBox.indexOf(toolSelection);
     if(locationInToolbox < 0) { 
       this.toolBox.push(toolSelection);
@@ -59,7 +59,14 @@ export class ToolboxViewComponent implements angular.IOnInit {
   }
 
   removeTools(){
-    this.toolBox.splice(0);
+    const ref = this.dialogService.createDialog<ConfirmDialogComponent>(ConfirmDialogComponent, this.$scope);
+    ref.controller.options =  {title: 'Hold up!', message: 'Are you sure you want to empty the toolbox?'};
+    ref.controller.getScope().$on('choice', (event, data) => {
+      if(data) {
+        this.toolBox.splice(0);
+      }
+      this.dialogService.destroyDialog();
+    });
   }
 
   get totalCostOfTools(): number {

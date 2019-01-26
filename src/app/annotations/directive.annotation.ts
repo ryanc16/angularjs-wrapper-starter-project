@@ -13,7 +13,9 @@ export function Directive(options: DirectiveOptions) {
     }
     target.$ctrl = target.prototype;
     target.controller = target;
-    target.$inject = options.providers ? options.providers.map(dep => dep.name || dep.toString()) : [];
+    if(options && options.providers) {
+      target.$inject = options.providers.map(dep => dep.name || dep.toString());
+    }
     target.transclude = options.transclude ? options.transclude : false;
     target.restrict = options.restrict ? options.restrict : 'EA';
     target.link = options.link || function(scope, elem, attrs) {};
