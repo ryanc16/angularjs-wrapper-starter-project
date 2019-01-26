@@ -13,8 +13,9 @@
     "start": "npm run compile && npm run serve",
     "serve": "node src/dev-server.js",
     "pack-templates": "node src/pack-templates.js",
+    "pack-stylesheets": "node src/pack-stylesheets.js",
     "transpile": "./node_modules/.bin/tsc -p tsconfig.json",
-    "compile": "npm run pack-templates && npm run transpile"
+    "compile": "npm run pack-templates && npm run pack-stylesheets && npm run transpile"
   },
   "keywords": [
     "angular",

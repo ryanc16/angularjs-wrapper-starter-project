@@ -7,10 +7,6 @@ html, body {
   font-size: 16px;
 }
 
-tool {
-  display: inline-block;
-}
-
 .card {
   display: inline-block;
   border-radius: 3px;
