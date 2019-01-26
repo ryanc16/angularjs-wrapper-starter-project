@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 define("templates", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.name}} - ${{$ctrl.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>\r\n<div class=\"toolsList\" templateId=\"tools\"></div>" };
+    exports.Templates = { "app.component.html": "<h2>AppComponent Toolbox</h2>\r\n<toolbox-view></toolbox-view>", "tool.component.html": "<div class=\"card\">\r\n  <div class=\"card-heading\">\r\n    {{$ctrl.model.name}} - ${{$ctrl.model.price}} ({{$ctrl.quant}})<button ng-click=\"$ctrl.removeTool()\" class=\"button\" style=\"float: right\">X</button>\r\n  </div>\r\n  <div class=\"card-body\">\r\n    {{$ctrl.model.desc}}\r\n  </div>\r\n</div>", "toolbox-view.component.html": "<div>Tool Box Items ({{$ctrl.toolBox.length}}) ${{$ctrl.totalCostOfTools}}</div>\r\n<hr>\r\n<div>\r\n<select ng-model=\"$ctrl.selectedTool\" ng-options=\"tool.name for tool in $ctrl.allTools\">\r\n</select>\r\n</div>\r\n<div>\r\n  <button ng-click=\"$ctrl.addTool($ctrl.selectedTool)\" class=\"button button-primary\">Add Tool</button>\r\n  <button ng-click=\"$ctrl.removeTools()\" class=\"button button-danger\">Remove All Tools</button>\r\n</div>\r\n<br>\r\n<div class=\"toolsList\" templateId=\"tools\">\r\n    <tool ng-repeat=\"tool in $ctrl.toolBox\" model=\"tool\"></tool>\r\n</div>" };
 });
 define("stylesheets", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -107,6 +107,7 @@ define("annotations/component.annotation", ["require", "exports", "templates", "
             }
             target.$ctrl = target.prototype;
             target.controller = target;
+            target.bindings = Object.assign({}, target.prototype.bindings);
             target.$inject = options.providers ? options.providers.map(function (dep) { return dep.name || dep.toString(); }) : [];
             target.transclude = options.transclude ? options.transclude : false;
             target.restrict = options.restrict ? options.restrict : 'E';
@@ -173,15 +174,29 @@ define("annotations/module.annotation", ["require", "exports", "utils/utils"], f
     }
     exports.NgModule = NgModule;
 });
-define("components/toolbox-view/tool/tool.component", ["require", "exports", "annotations/component.annotation"], function (require, exports, component_annotation_2) {
+define("annotations/input.annotation", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    function Input(type) {
+        return function (target, key) {
+            if (target.bindings == null) {
+                target.bindings = {};
+            }
+            target.bindings[key] = type;
+        };
+    }
+    exports.Input = Input;
+});
+define("components/toolbox-view/tool/tool.model", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
+define("components/toolbox-view/tool/tool.component", ["require", "exports", "annotations/component.annotation", "annotations/input.annotation"], function (require, exports, component_annotation_2, input_annotation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ToolComponent = /** @class */ (function () {
         function ToolComponent($scope) {
             this.$scope = $scope;
-            this.name = '';
-            this.price = null;
-            this.desc = '';
             this.quant = 1;
         }
         ToolComponent.prototype.$onInit = function () {
@@ -193,6 +208,10 @@ define("components/toolbox-view/tool/tool.component", ["require", "exports", "an
         ToolComponent.prototype.$onDestroy = function () {
             // Called before component is destroyed  
         };
+        __decorate([
+            input_annotation_1.Input('<'),
+            __metadata("design:type", Object)
+        ], ToolComponent.prototype, "model", void 0);
         ToolComponent = __decorate([
             component_annotation_2.Component({
                 selector: 'tool',
@@ -205,10 +224,6 @@ define("components/toolbox-view/tool/tool.component", ["require", "exports", "an
         return ToolComponent;
     }());
     exports.ToolComponent = ToolComponent;
-});
-define("components/toolbox-view/tool/tool.model", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
 });
 define("annotations/injectable.annotation", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -279,7 +294,7 @@ define("annotations/viewchild.annotation", ["require", "exports"], function (req
     }
     exports.ViewChild = ViewChild;
 });
-define("components/toolbox-view/toolbox-view.component", ["require", "exports", "annotations/component.annotation", "components/toolbox-view/tool/tool.component", "services/dynamic-component-factory.service", "annotations/viewchild.annotation"], function (require, exports, component_annotation_3, tool_component_1, dynamic_component_factory_service_1, viewchild_annotation_1) {
+define("components/toolbox-view/toolbox-view.component", ["require", "exports", "annotations/component.annotation", "services/dynamic-component-factory.service", "annotations/viewchild.annotation"], function (require, exports, component_annotation_3, dynamic_component_factory_service_1, viewchild_annotation_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ToolboxViewComponent = /** @class */ (function () {
@@ -309,50 +324,26 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
         ToolboxViewComponent.prototype.$onInit = function () {
         };
         ToolboxViewComponent.prototype.addTool = function (toolSelection) {
-            var _this = this;
-            var locationInToolbox = this.toolBox.map(function (tool) { return tool.option; }).indexOf(toolSelection);
+            var locationInToolbox = this.toolBox.indexOf(toolSelection);
             if (locationInToolbox < 0) {
-                var compRef_1 = this.dcfs.createComponent(tool_component_1.ToolComponent, this.$scope);
-                this.toolElRef.append(compRef_1.component);
-                compRef_1.controller.name = toolSelection.name;
-                compRef_1.controller.price = toolSelection.price;
-                compRef_1.controller.desc = toolSelection.desc;
-                compRef_1.newScope.$on('removeTool', function (event, data) {
-                    var compref = _this.toolBox.filter(function (tool) { return tool.comp.newScope === data; });
-                    _this.removeOneTool(compRef_1);
-                });
-                this.toolBox.push({ option: toolSelection, comp: compRef_1 });
-            }
-            else {
-                this.toolBox[locationInToolbox].comp.controller.quant++;
+                this.toolBox.push(toolSelection);
             }
         };
         ToolboxViewComponent.prototype.removeOneTool = function (tool) {
             if (tool != null) {
-                var locationInToolbox = this.toolBox.map(function (tool) { return tool.comp; }).indexOf(tool);
+                var locationInToolbox = this.toolBox.indexOf(tool);
                 if (locationInToolbox > -1) {
-                    var ctrl = this.toolBox[locationInToolbox].comp.controller;
-                    if (ctrl.quant > 1) {
-                        ctrl.quant--;
-                    }
-                    else {
-                        this.dcfs.removeComponent(tool);
-                        this.toolBox.splice(locationInToolbox, 1);
-                    }
+                    this.toolBox.splice(locationInToolbox, 1);
                 }
             }
         };
         ToolboxViewComponent.prototype.removeTools = function () {
-            for (var _i = 0, _a = this.toolBox; _i < _a.length; _i++) {
-                var tool = _a[_i];
-                this.dcfs.removeComponent(tool.comp);
-            }
             this.toolBox.splice(0);
         };
         Object.defineProperty(ToolboxViewComponent.prototype, "totalCostOfTools", {
             get: function () {
                 return this.toolBox.length > 0 ? Math.round(this.toolBox
-                    .map(function (tool) { return tool.comp.controller.price * tool.comp.controller.quant; })
+                    .map(function (tool) { return tool.price; })
                     .reduce(function (prev, current) { return prev + current; }) * 100) / 100 : 0;
             },
             enumerable: true,
@@ -375,7 +366,7 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
     }());
     exports.ToolboxViewComponent = ToolboxViewComponent;
 });
-define("components/toolbox-view/toolbox-view.module", ["require", "exports", "annotations/module.annotation", "components/toolbox-view/tool/tool.component", "components/toolbox-view/toolbox-view.component", "services/dynamic-component-factory.service"], function (require, exports, module_annotation_1, tool_component_2, toolbox_view_component_1, dynamic_component_factory_service_2) {
+define("components/toolbox-view/toolbox-view.module", ["require", "exports", "annotations/module.annotation", "components/toolbox-view/tool/tool.component", "components/toolbox-view/toolbox-view.component", "services/dynamic-component-factory.service"], function (require, exports, module_annotation_1, tool_component_1, toolbox_view_component_1, dynamic_component_factory_service_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ToolboxViewModule = /** @class */ (function () {
@@ -385,14 +376,14 @@ define("components/toolbox-view/toolbox-view.module", ["require", "exports", "an
             module_annotation_1.NgModule({
                 declarations: [
                     toolbox_view_component_1.ToolboxViewComponent,
-                    tool_component_2.ToolComponent
+                    tool_component_1.ToolComponent
                 ],
                 providers: [
                     dynamic_component_factory_service_2.DynamicComponentFactoryService
                 ],
                 exports: [
                     toolbox_view_component_1.ToolboxViewComponent,
-                    tool_component_2.ToolComponent
+                    tool_component_1.ToolComponent
                 ]
             })
         ], ToolboxViewModule);
@@ -465,19 +456,6 @@ define("main", ["require", "exports", "app.module"], function (require, exports,
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     new app_module_1.AppModule();
-});
-define("annotations/input.annotation", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function Input(type) {
-        return function (target, key) {
-            if (target.bindings == null) {
-                target.bindings = {};
-            }
-            target.bindings[key] = type;
-        };
-    }
-    exports.Input = Input;
 });
 define("services/ng-services.service", ["require", "exports", "annotations/injectable.annotation"], function (require, exports, injectable_annotation_3) {
     "use strict";

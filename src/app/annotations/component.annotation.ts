@@ -38,6 +38,7 @@ export function Component(options: ComponentOptions){
     
     target.$ctrl = target.prototype;
     target.controller = target;
+    target.bindings = Object.assign({}, target.prototype.bindings);
     target.$inject = options.providers ? options.providers.map(dep => dep.name || dep.toString()) : [];
     target.transclude = options.transclude ? options.transclude : false;
     target.restrict = options.restrict ? options.restrict : 'E';
@@ -54,5 +55,4 @@ export interface ComponentOptions extends DirectiveOptions {
   providers?: any[];
   transclude?: boolean;
   restrict?: string;
-  bindings?: object;
 }

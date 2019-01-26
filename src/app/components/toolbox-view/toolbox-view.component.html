@@ -9,4 +9,6 @@
   <button ng-click="$ctrl.removeTools()" class="button button-danger">Remove All Tools</button>
 </div>
 <br>
-<div class="toolsList" templateId="tools"></div>
+<div class="toolsList">
+    <tool ng-repeat="tool in $ctrl.toolBox" model="tool"></tool>
+</div>

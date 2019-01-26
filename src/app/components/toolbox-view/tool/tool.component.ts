@@ -1,4 +1,6 @@
 import { Component } from '../../../annotations/component.annotation';
+import { Input } from 'app/annotations/input.annotation';
+import { ToolModel } from './tool.model';
 
 @Component({
   selector: 'tool',
@@ -8,9 +10,9 @@ import { Component } from '../../../annotations/component.annotation';
 })
 export class ToolComponent implements angular.IOnDestroy, angular.IOnInit {
 
-  name: string = '';
-  price: number = null;
-  desc: string = '';
+  @Input('<')
+  model: ToolModel;
+
   quant: number = 1;
   constructor(private $scope: angular.IScope) {
     
