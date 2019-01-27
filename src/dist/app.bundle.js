@@ -15,7 +15,7 @@ define("templates", ["require", "exports"], function (require, exports) {
 define("stylesheets", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Stylesheets = { "confirm-dialog.component.css": "confirm-dialog .card > .card-footer > * {\r\n  margin: auto 5px;\r\n}", "dialog.component.css": "#modal-dialog.modal-dialog-backdrop {\r\n  position: absolute;\r\n  left:0;\r\n  right:0;\r\n  top: 0;\r\n  bottom: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  align-items: center;\r\n  -moz-animation: fade 0.2s ease-in;\r\n  -ms-animation: fade 0.2s ease-in;\r\n  -webkit-animation: fade 0.2s ease-in;\r\n  -o-animation: fade 0.2s ease-in;\r\n  animation: fade 0.2s ease-in;\r\n  animation-fill-mode: forwards;\r\n}\r\n@keyframes fade {\r\n  from {\r\n    background-color: rgba(0,0,0,0.0);\r\n  }\r\n\r\n  to {\r\n    background-color: rgba(0,0,0,0.5);\r\n  }\r\n}", "tool.component.css": "tool {\r\n  display: inline-block;\r\n}", "toolbox-view.component.css": "toolbox-view .toolsList {\r\n  display: grid;\r\n  grid-template-columns: repeat(2, 1fr);\r\n}" };
+    exports.Stylesheets = { "confirm-dialog.component.css": "confirm-dialog {\r\n  max-width: 70vw;\r\n  max-height: 70vh;\r\n  position: fixed;\r\n}\r\nconfirm-dialog .card > .card-body {\r\n  overflow: auto;\r\n  max-height: 70vh;\r\n}\r\nconfirm-dialog .card > .card-footer > * {\r\n  margin: auto 5px;\r\n}", "dialog.component.css": "#modal-dialog.modal-dialog-backdrop {\r\n  position: absolute;\r\n  left:0;\r\n  right:0;\r\n  top: 0;\r\n  bottom: 0;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  align-items: center;\r\n  -moz-animation: fade 0.2s ease-in;\r\n  -ms-animation: fade 0.2s ease-in;\r\n  -webkit-animation: fade 0.2s ease-in;\r\n  -o-animation: fade 0.2s ease-in;\r\n  animation: fade 0.2s ease-in;\r\n  animation-fill-mode: forwards;\r\n}\r\n@keyframes fade {\r\n  from {\r\n    background-color: rgba(0,0,0,0.0);\r\n  }\r\n\r\n  to {\r\n    background-color: rgba(0,0,0,0.5);\r\n  }\r\n}", "tool.component.css": "tool {\r\n  display: inline-block;\r\n}", "toolbox-view.component.css": "toolbox-view .toolsList {\r\n  display: grid;\r\n  grid-template-columns: repeat(2, 1fr);\r\n}" };
 });
 define("utils/utils", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -312,14 +312,9 @@ define("components/dialog/dialog.component", ["require", "exports", "annotations
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var DialogComponent = /** @class */ (function () {
-        function DialogComponent($scope) {
-            this.$scope = $scope;
+        function DialogComponent() {
         }
         DialogComponent.prototype.$onInit = function () {
-        };
-        DialogComponent.prototype.setComponent = function (comp) {
-            this.component = comp;
-            // this.dialogRef.append(this.component.component);
         };
         __decorate([
             index_2.ViewChild('dialog', { readAs: 'JQLite' }),
@@ -329,10 +324,9 @@ define("components/dialog/dialog.component", ["require", "exports", "annotations
             index_2.Component({
                 selector: 'modal-dialog',
                 templateUrl: 'dialog.component.html',
-                stylesUrl: 'dialog.component.css',
-                providers: ['$scope']
+                stylesUrl: 'dialog.component.css'
             }),
-            __metadata("design:paramtypes", [Object])
+            __metadata("design:paramtypes", [])
         ], DialogComponent);
         return DialogComponent;
     }());
@@ -485,7 +479,6 @@ define("components/toolbox-view/toolbox-view.component", ["require", "exports", 
         };
         ToolboxViewComponent.prototype.removeTools = function () {
             var _this = this;
-            console.log(this.dialogService);
             var ref = this.dialogService.createDialog(confirm_dialog_component_2.ConfirmDialogComponent, this.$scope);
             ref.controller.options = { title: 'Hold up!', message: 'Are you sure you want to empty the toolbox?' };
             ref.controller.getScope().$on('choice', function (event, data) {
