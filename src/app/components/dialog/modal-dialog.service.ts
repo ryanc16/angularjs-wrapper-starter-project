@@ -1,4 +1,4 @@
-import { Injectable } from '../../annotations/index';
+import { Injectable } from '../../decorators/index';
 import { DynamicComponentFactoryService, ComponentRef } from '../../services/dynamic-component-factory.service';
 import { DialogComponent } from '../../components/dialog/dialog.component';
 declare var angular: angular.IAngularStatic;

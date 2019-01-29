@@ -1,4 +1,4 @@
-import { Component } from '../../annotations/component.annotation';
+import { Component } from '../../decorators/component.decorator';
 import { ModalDialogService } from '../dialog/modal-dialog.service';
 import { ToolModel } from './tool/tool.model';
 import { ConfirmDialogComponent } from '../dialog/confirm-dialog/confirm-dialog.component';

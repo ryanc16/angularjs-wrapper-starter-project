@@ -1,5 +1,5 @@
-import { Component } from '../../../annotations/component.annotation';
-import { Input } from 'app/annotations/input.annotation';
+import { Component } from '../../../decorators/component.decorator';
+import { Input } from 'app/decorators/input.decorator';
 import { ToolModel } from './tool.model';
 
 @Component({

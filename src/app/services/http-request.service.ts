@@ -1,4 +1,4 @@
-import { Injectable } from '../annotations/injectable.annotation';
+import { Injectable } from '../decorators/injectable.decorator';
 
 @Injectable()
 export class HttpRequestService {

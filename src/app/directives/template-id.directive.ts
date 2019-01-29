@@ -1,4 +1,4 @@
-import { Directive } from '../annotations/directive.annotation';
+import { Directive } from '../decorators/directive.decorator';
 
 @Directive({
   selector: 'templateId'

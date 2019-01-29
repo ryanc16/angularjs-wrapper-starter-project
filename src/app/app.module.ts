@@ -1,4 +1,4 @@
-import { NgModule } from './annotations/module.annotation';
+import { NgModule } from './decorators/module.decorator';
 import { AppComponent } from './app.component';
 import { ToolboxViewModule } from './components/toolbox-view/toolbox-view.module';
 import { HttpRequestService } from './services/http-request.service';
