@@ -1,4 +1,4 @@
-import { Component, Input } from '../../../annotations/index';
+import { Component, Input } from '../../../decorators/index';
 
 @Component({
   selector: 'confirm-dialog',

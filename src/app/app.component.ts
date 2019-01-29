@@ -1,4 +1,4 @@
-import { Component } from './annotations/component.annotation';
+import { Component } from './decorators/component.decorator';
 
 @Component({
   selector: 'app-component',

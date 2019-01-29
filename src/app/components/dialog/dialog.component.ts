@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '../../annotations/index';
+import { Component, ViewChild } from '../../decorators/index';
 
 @Component({
   selector: 'modal-dialog',

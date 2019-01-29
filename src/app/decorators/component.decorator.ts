@@ -1,7 +1,7 @@
 import { Templates } from '../templates';
 import { Stylesheets } from '../stylesheets';
 import { Utils } from '../utils/utils';
-import { DirectiveOptions } from './directive.annotation';
+import { DirectiveOptions } from './directive.decorator';
 declare var angular: angular.IAngularStatic;
 
 export function Component(options: ComponentOptions){
