@@ -4,22 +4,28 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Compile",
+      "label": "Build",
       "type": "shell",
-      "group": "build",
       "command": "npm",
-      "args": ["run", "compile"],
-      "problemMatcher": [],
-      "dependsOn": ["Transpile"]
+      "args": ["run", "build"],
+      "group": "build",
+      "problemMatcher": []
     },
     {
-      "label": "Transpile",
+      "label": "Compile",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "compile"],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "TranspileDev",
       "type": "shell",
       "command": "npm",
       "args": ["run", "transpile"],
       "group": "build",
-      "problemMatcher": [],
-      "dependsOn":["PackTemplates"]
+      "problemMatcher": []
     },
     {
       "label": "PackTemplates",
@@ -27,8 +33,15 @@
       "command": "npm",
       "args": ["run", "pack-templates"],
       "group": "build",
-      "problemMatcher": [],
-      "dependsOn": []
+      "problemMatcher": []
+    },
+    {
+      "label": "PackStylesheets",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "pack-stylesheets"],
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }
