@@ -1,2 +1,5 @@
 node_modules/*
 dist/*
+libs/*
+src/app/templates.ts
+src/app/stylesheets.ts

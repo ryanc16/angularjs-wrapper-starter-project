@@ -8,18 +8,18 @@ declare var angular: angular.IAngularStatic;
 })
 export class ModalDialogService {
 
-  currentDialog: ComponentRef<DialogComponent<any>>;
+  private currentDialog: ComponentRef<DialogComponent<any>>;
 
-  constructor(private dcfs:DynamicComponentFactoryService) {
+  constructor(private _dcfs: DynamicComponentFactoryService) {
 
   }
 
-  createDialog<T>(component: any, $scope: angular.IScope, options?: any): ComponentRef<T> {
+  createDialog<T>(component: Type<T>, $scope: angular.IScope, options?: any): ComponentRef<T> {
     if(this.currentDialog) {
       angular.element(this.currentDialog.component).remove();
     }
-    const dialog = this.dcfs.createComponent<DialogComponent<T>>(DialogComponent, $scope);
-    const compref = this.dcfs.createComponent<T>(component, $scope);
+    const dialog = this._dcfs.createComponent<DialogComponent<T>>(DialogComponent, $scope);
+    const compref = this._dcfs.createComponent<T>(component, $scope);
     dialog.component.attr('id', 'modal-dialog');
     dialog.component.addClass('dialog');
     dialog.component.addClass('modal-dialog-backdrop');
@@ -31,8 +31,12 @@ export class ModalDialogService {
 
   destroyDialog() {
     if(this.currentDialog) {
-      this.dcfs.removeComponent(this.currentDialog);
+      this._dcfs.removeComponent(this.currentDialog);
       this.currentDialog = null;
     }
   }
+}
+
+interface Type<T> extends Function {
+  new (...args: any[]): T;
 }

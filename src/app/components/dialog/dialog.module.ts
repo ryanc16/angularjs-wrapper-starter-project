@@ -3,11 +3,13 @@ import { DynamicComponentFactoryService } from '../../services/dynamic-component
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from './dialog.component';
 import { ModalDialogService } from './modal-dialog.service';
+import { QuantityDialogComponent } from './quantity-dialog/quantity-dialog.component';
 
 @NgModule({
   declarations: [
     DialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    QuantityDialogComponent
   ],
   providers: [
     DynamicComponentFactoryService,
@@ -16,7 +18,7 @@ import { ModalDialogService } from './modal-dialog.service';
   exports: [
     DialogComponent,
     ConfirmDialogComponent,
-    ModalDialogService
+    QuantityDialogComponent
   ]
 })
 export class DialogModule {

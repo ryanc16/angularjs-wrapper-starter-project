@@ -10,9 +10,9 @@ var path = require('path');
 
 http.createServer(function (request, response) {
 
-    var filePath = './src' + request.url;
-    if (filePath == './src/') {
-        filePath = './src/index.html';
+    var filePath = './dist' + request.url;
+    if (filePath == './dist/') {
+        filePath = './dist/index.html';
     }
 
     // console.log('request', filePath);

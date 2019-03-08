@@ -1,4 +1,3 @@
-import { Templates } from '../templates';
 import { Stylesheets } from '../stylesheets';
 import { Utils } from '../utils/utils';
 import { DirectiveOptions } from './directive.decorator';
@@ -11,8 +10,7 @@ export function Component(options: ComponentOptions){
       target.template = options.template;
     }
     else if(options.templateUrl) {
-      options.template = '';
-      target.template = Templates[options.templateUrl];
+      target.templateUrl = options.templateUrl;
     }
     if(options.stylesUrl) {
       const origInit = target.prototype.$onInit;
