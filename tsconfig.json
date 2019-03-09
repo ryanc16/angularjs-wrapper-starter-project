@@ -4,6 +4,7 @@
     "target": "es5",
     "lib": ["dom","es2015"],
     "baseUrl": "src/",
+    "outFile": "dist/assets/js/app.bundle.js",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },

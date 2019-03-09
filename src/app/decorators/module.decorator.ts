@@ -1,4 +1,5 @@
 import { Utils } from '../utils/utils';
+import { Templates } from 'app/templates';
 declare const angular: angular.IAngularStatic;
 
 export function NgModule(options: ModuleOptions) {
@@ -16,15 +17,32 @@ export function NgModule(options: ModuleOptions) {
     }
     // Register all directives and components to this module
     const declarations = options.declarations ? options.declarations : [];
+    let componentTemplates: string[] = [];
     for(let dec of declarations) {
       const decname = Utils.camelCase(dec.selector);
       if(dec.type === 'component') {
         (target as angular.IModule).component(decname, dec);
+        if(dec.templateUrl != null) {
+          componentTemplates.push(dec.templateUrl);
+        }
       }
       else if(dec.type === 'directive') {
         (target as angular.IModule).directive(decname, dec);
       }
     }
+
+    // Register all the component templates with the templateCache service
+    (target as angular.IModule).run(['$templateCache', function($templateCache: angular.ITemplateCacheService) {
+      for(let templateUrl of componentTemplates) {
+        $templateCache.put(templateUrl, Templates[templateUrl]);
+      }
+    }]);
+
+    // TODO: add module config
+
+    // TODO: add module Routing config
+
+    // TODO: add patch to $routeProvider to allow passing component constructors for routes
 
     // TODO: insert the bootstrapped components?
     // for(let comp of options.bootstrap) {

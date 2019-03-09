@@ -1,7 +1,8 @@
+import { EventEmitter } from 'app/utils/event-emitter';
 import { Component } from '../../decorators/component.decorator';
+import { ConfirmDialogComponent } from '../dialog/confirm-dialog/confirm-dialog.component';
 import { ModalDialogService } from '../dialog/modal-dialog.service';
 import { ToolModel } from './tool/tool.model';
-import { ConfirmDialogComponent } from '../dialog/confirm-dialog/confirm-dialog.component';
 
 
 @Component({
@@ -30,12 +31,14 @@ export class ToolboxViewComponent implements angular.IOnInit {
     }
   ];
 
-  private toolBox: ToolModel[] = [];
+  private toolBox: {tool: ToolModel, quantity: number}[] = [];
 
   selectedTool: ToolModel = this.allTools[0];
 
-  constructor(private $scope: angular.IScope, private dialogService: ModalDialogService) {
+  emitter: EventEmitter<ToolModel> = new EventEmitter<ToolModel>();
 
+  constructor(private $scope: angular.IScope, private dialogService: ModalDialogService) {
+    this.emitter.on('remove_tool', this.removeOneTool, this);
   }
 
   $onInit(): void {
@@ -43,15 +46,15 @@ export class ToolboxViewComponent implements angular.IOnInit {
   }
 
   addTool(toolSelection: ToolModel) {
-    let locationInToolbox = this.toolBox.indexOf(toolSelection);
+    let locationInToolbox = this.toolBox.map(pair => pair.tool).indexOf(toolSelection);
     if(locationInToolbox < 0) { 
-      this.toolBox.push(toolSelection);
+      this.toolBox.push({tool: toolSelection, quantity: 1});
     }
   }
 
   removeOneTool(tool: ToolModel) {
     if(tool != null) {
-      let locationInToolbox = this.toolBox.indexOf(tool);
+      let locationInToolbox = this.toolBox.map(pair => pair.tool).indexOf(tool);
       if(locationInToolbox > -1) {
           this.toolBox.splice(locationInToolbox,1);
       }
@@ -60,9 +63,9 @@ export class ToolboxViewComponent implements angular.IOnInit {
 
   removeTools(){
     const ref = this.dialogService.createDialog<ConfirmDialogComponent>(ConfirmDialogComponent, this.$scope);
-    ref.controller.options =  {title: 'Hold up!', message: 'Are you sure you want to empty the toolbox?'};
-    ref.controller.getScope().$on('choice', (event, data) => {
-      if(data) {
+    ref.controller.options = {title: 'Hold up!', message: 'Are you sure you want to empty the toolbox?'};
+    ref.controller.events.once('choice', value =>{
+      if(value === true) {
         this.toolBox.splice(0);
       }
       this.dialogService.destroyDialog();
@@ -72,7 +75,7 @@ export class ToolboxViewComponent implements angular.IOnInit {
   get totalCostOfTools(): number {
     return this.toolBox.length > 0 ? Math.round(
       this.toolBox
-      .map(tool => tool.price)
+      .map(pair => pair.tool.price*pair.quantity)
       .reduce((prev, current) => prev + current) * 100) / 100 : 0;
   }
 }

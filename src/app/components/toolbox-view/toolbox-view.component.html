@@ -10,5 +10,5 @@
 </div>
 <br>
 <div class="toolsList">
-    <tool ng-repeat="tool in $ctrl.toolBox" model="tool"></tool>
+    <tool ng-repeat="toolPair in $ctrl.toolBox" model="toolPair.tool" quant="toolPair.quantity" emitter="$ctrl.emitter"></tool>
 </div>

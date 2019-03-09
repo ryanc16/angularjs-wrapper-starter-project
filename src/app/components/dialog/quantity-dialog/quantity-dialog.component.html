@@ -1,0 +1,15 @@
+
+
+<div class="card">
+  <div class="card-heading">
+    Adjust Quantity
+  </div>
+  <div class="card-body">
+    <form name="quantityForm">
+      <input type="number" ng-model="$ctrl.quantity" >
+    </form>
+  </div>
+  <div class="card-footer flex-right">
+      <button class="button button-primary" ng-click="$ctrl.confirm()">Yes</button> <button class="button button-default" ng-click="$ctrl.deny()">No</button>
+  </div>
+</div>

@@ -3,19 +3,19 @@
   "version": "1.1.0",
   "description": "This starter project aims to wrap angularjs in an angular2+ development workflow and syntax.",
   "dependencies": {
-    "almond": "^0.3.3"
+    "almond": "0.3.3"
   },
   "devDependencies": {
     "@types/angular": "1.6.53",
-    "typescript": "2.5.2"
+    "typescript": "3.1.3"
   },
   "scripts": {
     "start": "npm run compile && npm run serve",
     "serve": "node dev-server.js",
     "pack-templates": "node pack-templates.js",
     "pack-stylesheets": "node pack-stylesheets.js",
-    "transpile:dev": "./node_modules/.bin/tsc -p tsconfig.dev.json",
-    "transpile:prod": "./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "transpile:dev": "./node_modules/.bin/tsc -p tsconfig.json",
+    "transpile:prod": "./node_modules/.bin/tsc -p tsconfig.json",
     "compile": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:dev",
     "build": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:prod"
   },

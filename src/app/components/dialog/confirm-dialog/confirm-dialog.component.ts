@@ -1,4 +1,5 @@
 import { Component, Input } from '../../../decorators/index';
+import { EventEmitter } from 'app/utils/event-emitter';
 
 @Component({
   selector: 'confirm-dialog',
@@ -10,20 +11,22 @@ export class ConfirmDialogComponent {
   @Input('<')
   options: ConfirmDialogOptions;
 
+  events: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private $scope: angular.IScope) {
-  }
 
-  getScope(): angular.IScope {
-    return this.$scope;
+  constructor() {
   }
 
   private confirm() {
-    this.$scope.$emit('choice', true);
+    if(this.events) {
+      this.events.emit('choice', true);
+    }
   }
 
   private deny() {
-    this.$scope.$emit('choice', false);
+    if(this.events) {
+      this.events.emit('choice', false);
+    }
   }
 
 
