@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build",
+      "label": "Build Dev",
       "type": "shell",
       "command": "npm",
       "args": ["run", "build"],
@@ -12,34 +12,34 @@
       "problemMatcher": []
     },
     {
-      "label": "Compile",
+      "label": "Build Prod",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "compile"],
+      "args": ["run", "build --prod"],
       "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "TranspileDev",
+      "label": "Clean and Build",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "transpile"],
+      "args": ["run", "build:clean"],
       "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "PackTemplates",
+      "label": "Compile Dev",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "pack-templates"],
+      "args": ["run", "compile:dev"],
       "group": "build",
       "problemMatcher": []
     },
     {
-      "label": "PackStylesheets",
+      "label": "Compile Prod",
       "type": "shell",
       "command": "npm",
-      "args": ["run", "pack-stylesheets"],
+      "args": ["run", "compile:prod"],
       "group": "build",
       "problemMatcher": []
     }

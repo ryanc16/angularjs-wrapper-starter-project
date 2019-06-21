@@ -12,12 +12,14 @@
   "scripts": {
     "start": "npm run compile && npm run serve",
     "serve": "node dev-server.js",
-    "pack-templates": "node pack-templates.js",
-    "pack-stylesheets": "node pack-stylesheets.js",
-    "transpile:dev": "./node_modules/.bin/tsc -p tsconfig.json",
-    "transpile:prod": "./node_modules/.bin/tsc -p tsconfig.json",
-    "compile": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:dev",
-    "build": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:prod"
+    "pack:templates": "node pack-templates.js",
+    "pack:stylesheets": "node pack-stylesheets.js",
+    "compile:dev": "npm run pack:templates && npm run pack:stylesheets && bash ./node_modules/.bin/tsc -p tsconfig.dev.json",
+    "compile:prod": "npm run pack:templates && npm run pack:stylesheets && bash ./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "build": "node build.js",
+    "build:clean": "node build.js --clean",
+    "build:dev": "npm run build",
+    "build:prod": "npm run build --prod"
   },
   "keywords": [
     "angular",

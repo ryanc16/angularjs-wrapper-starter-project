@@ -1,4 +1,3 @@
-import { ClassExpression, ClassDeclaration, ClassElement } from "../../../node_modules/typescript/lib/typescript";
 
 export class EventEmitter<T> {
   private readonly eventMap:{[index:string]: Function} = {};
