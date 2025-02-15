@@ -1,27 +1,29 @@
 {
   "name": "angularjs-dev-wrapper",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This starter project aims to wrap angularjs in an angular2+ development workflow and syntax.",
-  "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "almond": "^0.3.3"
+  },
   "devDependencies": {
     "@types/angular": "1.6.53",
-    "browserify": "13.3.0",
     "typescript": "2.5.2"
   },
   "scripts": {
     "start": "npm run compile && npm run serve",
-    "serve": "node src/dev-server.js",
-    "pack-templates": "node src/pack-templates.js",
-    "transpile": "./node_modules/.bin/tsc -p tsconfig.json",
-    "browserify": "./node_modules/.bin/browserify src/app/main.js -o src/dist/app.bundle.js",
-    "compile": "npm run pack-templates && npm run transpile && npm run browserify"
+    "serve": "node dev-server.js",
+    "pack-templates": "node pack-templates.js",
+    "pack-stylesheets": "node pack-stylesheets.js",
+    "transpile:dev": "./node_modules/.bin/tsc -p tsconfig.dev.json",
+    "transpile:prod": "./node_modules/.bin/tsc -p tsconfig.prod.json",
+    "compile": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:dev",
+    "build": "npm run pack-templates && npm run pack-stylesheets && npm run transpile:prod"
   },
   "keywords": [
     "angular",
     "angularjs",
     "typescript",
-    "browserify",
+    "almond",
     "web",
     "spa"
   ],

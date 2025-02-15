@@ -1,15 +1,18 @@
-import { Component } from '../../../annotations/component.annotation';
+import { Component } from '../../../decorators/component.decorator';
+import { Input } from 'app/decorators/input.decorator';
+import { ToolModel } from './tool.model';
 
 @Component({
   selector: 'tool',
-  templateUrl: './app/components/toolbox-view/tool/tool.component.html',
+  templateUrl: 'tool.component.html',
+  stylesUrl: 'tool.component.css',
   providers: ['$scope']
 })
 export class ToolComponent implements angular.IOnDestroy, angular.IOnInit {
 
-  name: string = '';
-  price: number = null;
-  desc: string = '';
+  @Input('<')
+  model: ToolModel;
+
   quant: number = 1;
   constructor(private $scope: angular.IScope) {
     

@@ -1,11 +1,13 @@
-import { NgModule } from './annotations/module.annotation';
+import { NgModule } from './decorators/module.decorator';
 import { AppComponent } from './app.component';
 import { ToolboxViewModule } from './components/toolbox-view/toolbox-view.module';
 import { HttpRequestService } from './services/http-request.service';
+import { TemplateIdDirective } from './directives/template-id.directive';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TemplateIdDirective
   ],
   providers: [
     HttpRequestService

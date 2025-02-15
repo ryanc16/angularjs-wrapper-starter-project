@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "amd",
     "target": "es5",
     "lib": ["dom","es2015"],
     "baseUrl": "src/",
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src/app/**/*.ts"],
-  "exclude": ["src/app/plugins", "node_modules/**/*"],
+  "exclude": ["node_modules/**/*"],
   "typeAcquisition": {
     "enable": true
   }

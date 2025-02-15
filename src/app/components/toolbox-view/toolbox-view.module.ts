@@ -1,15 +1,18 @@
-import { NgModule } from '../../annotations/module.annotation';
+import { NgModule } from '../../decorators/module.decorator';
+import { DialogModule } from '../dialog/dialog.module';
 import { ToolComponent } from './tool/tool.component';
 import { ToolboxViewComponent } from './toolbox-view.component';
-import { DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
 
 @NgModule({
   declarations: [
     ToolboxViewComponent,
-    ToolComponent
+    ToolComponent,
   ],
   providers: [
-    DynamicComponentFactoryService
+    
+  ],
+  imports: [
+    DialogModule
   ],
   exports: [
     ToolboxViewComponent,

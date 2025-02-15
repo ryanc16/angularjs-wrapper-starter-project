@@ -1,4 +1,4 @@
-import { Injectable } from '../annotations/injectable.annotation';
+import { Injectable } from '../decorators/injectable.decorator';
 import { Utils } from '../utils/utils';
 declare const angular: angular.IAngularStatic;
 

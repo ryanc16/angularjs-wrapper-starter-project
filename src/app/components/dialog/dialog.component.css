@@ -1,0 +1,26 @@
+#modal-dialog.modal-dialog-backdrop {
+  position: absolute;
+  left:0;
+  right:0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  -moz-animation: fade 0.2s ease-in;
+  -ms-animation: fade 0.2s ease-in;
+  -webkit-animation: fade 0.2s ease-in;
+  -o-animation: fade 0.2s ease-in;
+  animation: fade 0.2s ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes fade {
+  from {
+    background-color: rgba(0,0,0,0.0);
+  }
+
+  to {
+    background-color: rgba(0,0,0,0.5);
+  }
+}

@@ -1,94 +1,78 @@
-import { Component } from '../../annotations/component.annotation';
-import { ToolComponent } from './tool/tool.component';
-import { ComponentRef, DynamicComponentFactoryService } from '../../services/dynamic-component-factory.service';
+import { Component } from '../../decorators/component.decorator';
+import { ModalDialogService } from '../dialog/modal-dialog.service';
+import { ToolModel } from './tool/tool.model';
+import { ConfirmDialogComponent } from '../dialog/confirm-dialog/confirm-dialog.component';
+
 
 @Component({
   selector: 'toolbox-view',
-  templateUrl: './app/components/toolbox-view/toolbox-view.component.html',
-  providers: ['$scope', '$element', DynamicComponentFactoryService]
+  templateUrl: 'toolbox-view.component.html',
+  stylesUrl: 'toolbox-view.component.css',
+  providers: ['$scope', ModalDialogService]
 })
-export class ToolboxViewComponent {
+export class ToolboxViewComponent implements angular.IOnInit {
 
-  private allTools: ToolOption[] = [
+  private allTools: ToolModel[] = [
     {
       name: 'Hammer',
       price: 4.99,
-      desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip.",
-      component: ToolComponent
+      desc: "This durable grip hammer has a fiberglass handle to absorb impact and relieve arm strain. Won't crack or splinter. The drop forged polished steel head features a claw that enables you to remove nails with ease and a fiberglass handle that provides a comfortable, shock-absorbing grip."
     },
     {
       name: 'Wrench',
       price: 14.99,
-      desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit.",
-      component: ToolComponent
+      desc: "This 15 in. adjustable wrench is extra-long so you can tackle especially tough fasteners. Featuring a carbon steel construction and a rugged I-beam handle, this adjustable wrench is made for handling big jobs. The jaw design allows for greater strength and a better fit."
     },
+    {
+      name: 'Phillips Screwdriver',
+      price: 1.69,
+      desc: "This durable Phillips screwdriver is a staple for any toolbox. The chrome vanadium steel construction is rugged enough for even the most stubborn screws and a textured TPR grip handle provides plenty of control and comfort."
+    }
   ];
 
-  private toolBox: {option: ToolOption, comp: ComponentRef<ToolComponent>}[] = [];
+  private toolBox: ToolModel[] = [];
 
-  selectedTool: ToolOption = this.allTools[0];
+  selectedTool: ToolModel = this.allTools[0];
 
-  constructor(private $scope: angular.IScope, private $element: angular.IRootElementService, private dcfs: DynamicComponentFactoryService) {
-    
+  constructor(private $scope: angular.IScope, private dialogService: ModalDialogService) {
+
   }
 
-  addTool(toolSelection: ToolOption) {
-    let locationInToolbox = this.toolBox.map(tool => tool.option).indexOf(toolSelection);
-    if(locationInToolbox < 0) {
-      const compRef = this.dcfs.createComponent<ToolComponent>(toolSelection.component, this.$scope);
-      this.$element.append(compRef.component);
+  $onInit(): void {
 
-      compRef.controller.name = toolSelection.name;
-      compRef.controller.price = toolSelection.price;
-      compRef.controller.desc = toolSelection.desc;
-      compRef.newScope.$on('removeTool', (event, data) => {
-        let compref = this.toolBox.filter(tool => tool.comp.newScope === data);
-        this.removeOneTool(compRef);
-      });
-
-      this.toolBox.push({option: toolSelection, comp: compRef});
-    }
-    else {
-      this.toolBox[locationInToolbox].comp.controller.quant++;
-    }
-    
-    
   }
 
-  removeOneTool(tool: ComponentRef<ToolComponent>) {
+  addTool(toolSelection: ToolModel) {
+    let locationInToolbox = this.toolBox.indexOf(toolSelection);
+    if(locationInToolbox < 0) { 
+      this.toolBox.push(toolSelection);
+    }
+  }
+
+  removeOneTool(tool: ToolModel) {
     if(tool != null) {
-      let locationInToolbox = this.toolBox.map(tool => tool.comp).indexOf(tool);
+      let locationInToolbox = this.toolBox.indexOf(tool);
       if(locationInToolbox > -1) {
-        const ctrl = this.toolBox[locationInToolbox].comp.controller;
-        if(ctrl.quant > 1) {
-          ctrl.quant--;
-        }
-        else {
-          this.dcfs.removeComponent(tool);
           this.toolBox.splice(locationInToolbox,1);
-        }
       }
     }
   }
 
   removeTools(){
-    for(let tool of this.toolBox) {
-      this.dcfs.removeComponent(tool.comp);
-    }
-    this.toolBox.splice(0);
+    const ref = this.dialogService.createDialog<ConfirmDialogComponent>(ConfirmDialogComponent, this.$scope);
+    ref.controller.options =  {title: 'Hold up!', message: 'Are you sure you want to empty the toolbox?'};
+    ref.controller.getScope().$on('choice', (event, data) => {
+      if(data) {
+        this.toolBox.splice(0);
+      }
+      this.dialogService.destroyDialog();
+    });
   }
 
   get totalCostOfTools(): number {
     return this.toolBox.length > 0 ? Math.round(
       this.toolBox
-      .map(tool => tool.comp.controller.price*tool.comp.controller.quant)
-      .reduce((prev, current) => prev + current) *100) / 100 : 0;
+      .map(tool => tool.price)
+      .reduce((prev, current) => prev + current) * 100) / 100 : 0;
   }
-}
-
-interface ToolOption {
-  name: string;
-  price: number;
-  desc: string;
-  component: angular.IComponentController;
 }
